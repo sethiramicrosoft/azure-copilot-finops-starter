@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sethiramicrosoft.github.io/azure-copilot-finops-starter/contracts/action-ledger-event.schema.json",
+  "title": "ActionLedgerEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eventId",
+    "occurredAt",
+    "eventType",
+    "actionId",
+    "tooling",
+    "actor",
+    "state",
+    "payload"
+  ],
+  "properties": {
+    "eventId": { "type": "string", "minLength": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "itemCreated",
+        "itemUpdated",
+        "ownerAssigned",
+        "ownerReassigned",
+        "commentPosted",
+        "stateChanged",
+        "decisionRecorded",
+        "outcomeRecorded"
+      ]
+    },
+    "actionId": { "type": "string", "minLength": 1 },
+    "tooling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "externalId"],
+      "properties": {
+        "system": {
+          "type": "string",
+          "enum": ["ado", "jira", "github", "servicenow", "custom"]
+        },
+        "externalId": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "type": "string", "enum": ["human", "agent", "system"] },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": {
+          "type": "string",
+          "enum": ["new", "triaged", "approved", "authorized", "inProgress", "resolved", "dismissed", "closed"]
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["summary"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "decision": { "type": "string", "enum": ["approve", "reject", "needsMoreEvidence"] },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
