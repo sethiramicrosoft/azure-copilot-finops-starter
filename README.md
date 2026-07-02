@@ -227,24 +227,24 @@ These five actions are intentionally system-agnostic so customers can integrate 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'fontSize':'20px'},'flowchart':{'nodeSpacing':65,'rankSpacing':85,'padding':20,'useMaxWidth':true}} }%%
 flowchart LR
-    A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
-    B --> C[Analytics Engine<br/>Anomaly + Budget Risk + Forecast + What-if]
-    C --> K[Azure Copilot Agent Layer<br/>Persona-specific recommendation drafts]
-    K --> D[Recommendation Contract + Validator<br/>approvalRequired=true / allowAutomaticMutation=false]
+    A["Azure Cost Management + Metadata"] --> B["Cost Data Ingestor"]
+    B --> C["Analytics Engine<br/>Anomaly + Budget Risk + Forecast + What-if"]
+    C --> K["Azure Copilot Agent Layer<br/>Persona-specific recommendation drafts"]
+    K --> D["Recommendation Contract + Validator<br/>approvalRequired=true / allowAutomaticMutation=false"]
 
-    D --> E[Approval Plane (Runtime Authority)<br/>Human approve/reject/needsMoreEvidence]
-    E --> F[Action Router (Governed)<br/>ADO/Jira/GitHub/Custom]
-    F --> G[External Work Item System]
+    D --> E["Approval Plane (Runtime Authority)<br/>Human approve/reject/needsMoreEvidence"]
+    E --> F["Action Router (Governed)<br/>ADO/Jira/GitHub/Custom"]
+    F --> G["External Work Item System"]
 
-    D --> H[Action Ledger<br/>Append-only audit events]
+    D --> H["Action Ledger<br/>Append-only audit events"]
     E --> H
     F --> H
 
-    G --> I[Impact Re-checker]
+    G --> I["Impact Re-checker"]
     I --> C
     I --> H
 
-    J[Governance Boundary<br/>No automatic infra/cost mutation] -.enforced at.-> D
+    J["Governance Boundary<br/>No automatic infra/cost mutation"] -.enforced at.-> D
     J -.enforced at.-> E
     J -.enforced at.-> F
 ```

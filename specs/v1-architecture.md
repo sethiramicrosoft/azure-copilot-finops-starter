@@ -67,24 +67,24 @@ Model output is never treated as an executable command by default.
 
 ```mermaid
 flowchart LR
-    A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
-    B --> C[Analytics Engine\nAnomaly + Budget Risk + Forecast + What-if]
-    C --> K[Azure Copilot Agent Layer\nPersona-specific recommendation drafts]
-    K --> D[Recommendation Contract + Validator\napprovalRequired=true / allowAutomaticMutation=false]
+    A["Azure Cost Management + Metadata"] --> B["Cost Data Ingestor"]
+    B --> C["Analytics Engine\nAnomaly + Budget Risk + Forecast + What-if"]
+    C --> K["Azure Copilot Agent Layer\nPersona-specific recommendation drafts"]
+    K --> D["Recommendation Contract + Validator\napprovalRequired=true / allowAutomaticMutation=false"]
 
-    D --> E[Approval Plane (Runtime Authority)\nHuman approve/reject/needsMoreEvidence]
-    E --> F[Action Router (Governed)\nADO/Jira/GitHub/Custom]
-    F --> G[External Work Item System]
+    D --> E["Approval Plane (Runtime Authority)\nHuman approve/reject/needsMoreEvidence"]
+    E --> F["Action Router (Governed)\nADO/Jira/GitHub/Custom"]
+    F --> G["External Work Item System"]
 
-    D --> H[Action Ledger\nAppend-only audit events]
+    D --> H["Action Ledger\nAppend-only audit events"]
     E --> H
     F --> H
 
-    G --> I[Impact Re-checker]
+    G --> I["Impact Re-checker"]
     I --> C
     I --> H
 
-    J[Governance Boundary\nNo automatic infra/cost mutation] -.enforced at.-> D
+    J["Governance Boundary\nNo automatic infra/cost mutation"] -.enforced at.-> D
     J -.enforced at.-> E
     J -.enforced at.-> F
 ```
