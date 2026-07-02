@@ -8,6 +8,7 @@ import type {
   FinOpsSignal
 } from "./copilot.js";
 import { toRecommendation } from "./copilot.js";
+import { assertGovernancePolicy } from "./policy.js";
 import type { RouterAdapter } from "./types.js";
 
 export class AzureCopilotFinOpsOrchestrator {
@@ -43,6 +44,7 @@ export class AzureCopilotFinOpsOrchestrator {
     };
 
     const recommendationResponse = await this.copilotClient.generateRecommendation(copilotRequest);
+    assertGovernancePolicy(recommendationResponse);
     const recommendation = toRecommendation(recommendationResponse);
     const action = await this.actionService.createActionFromRecommendation(recommendation);
 
@@ -72,6 +74,10 @@ export class AzureCopilotFinOpsOrchestrator {
     ownerId: string,
     approval: ApprovalArtifact
   ): Promise<void> {
+    if (action.state === "new") {
+      await this.actionService.changeState(action, "triaged");
+    }
+
     this.actionService.recordDecision(action, approval);
     await this.actionService.assignOwner(action, ownerId);
     await this.actionService.changeState(action, "authorized");
@@ -79,6 +85,10 @@ export class AzureCopilotFinOpsOrchestrator {
   }
 
   async rejectAction(action: ActionItem, approval: ApprovalArtifact): Promise<void> {
+    if (action.state === "new") {
+      await this.actionService.changeState(action, "triaged");
+    }
+
     this.actionService.recordDecision(action, approval);
     await this.actionService.changeState(action, "dismissed");
   }

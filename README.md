@@ -32,6 +32,12 @@ Azure Copilot (with agent capability) is used to:
 
 All consequential actions remain human-approved and are never auto-executed.
 
+### Implementation mode (current, factual)
+
+- **Supported today:** human-in-the-loop usage of Azure Copilot for cost analysis/recommendation drafting, then captured into this workflow.
+- **Not assumed in default path:** an official public Azure Copilot API endpoint for direct custom app invocation.
+- **If your tenant provides a supported endpoint:** this starter can plug it in through the client adapter layer.
+
 ---
 
 ## 2. Why this exists

@@ -4,6 +4,12 @@
 
 Define how Azure Copilot agent capability is used in this solution without violating governance boundaries.
 
+## Reality boundary
+
+- Default integration mode is human-in-the-loop usage of Azure Copilot outputs.
+- This runbook does not assume a public Azure Copilot API endpoint is generally available.
+- If an organization has a supported endpoint in its tenant, it can be wired through the adapter layer.
+
 ## Agent responsibilities
 
 1. Convert FinOps signals into recommendation drafts.
