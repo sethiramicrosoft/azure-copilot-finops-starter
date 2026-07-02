@@ -4,6 +4,12 @@
 
 Define how Azure Copilot agent capability is used in this solution without violating governance boundaries.
 
+## Operating stance
+
+- Azure Copilot Agent is the primary intelligence interface for Cost Management interpretation and recommendation drafting.
+- The orchestration layer is the runtime authority for policy enforcement, approval gating, routing, and audit.
+- Advisory output and actuating operations are intentionally separated.
+
 ## Reality boundary
 
 - Default integration mode is human-in-the-loop usage of Azure Copilot outputs.
@@ -15,7 +21,15 @@ Define how Azure Copilot agent capability is used in this solution without viola
 1. Convert FinOps signals into recommendation drafts.
 2. Produce persona-specific summaries for engineering, EM, FinOps, FP&A, procurement, and executive audiences.
 3. Attach evidence references to recommendations.
-4. Route only approved actions through external tooling adapters.
+4. Hand off approved actions to governed router adapters.
+
+## Advisory vs actuating boundary
+
+- **Advisory:** explain, summarize, prioritize, and recommend.
+- **Actuating:** mutate systems, spend commitments, policy/budget changes, or infra changes.
+
+Only the advisory side is delegated to Azure Copilot Agent.  
+Actuating steps require explicit human decision artifacts and controlled router execution.
 
 ## Non-responsibilities
 
@@ -58,6 +72,17 @@ No action may move to `authorized` or `inProgress` unless:
 1. decision is explicitly `approve`,
 2. approver identity exists,
 3. rationale and timestamp exist.
+
+## Consequential action definition
+
+Consequential actions include:
+
+- resource resize/shutdown
+- budget/policy edits
+- reservation/savings-plan purchases
+- infrastructure mutation
+
+These are never auto-executed by the recommendation layer.
 
 ## Audit requirements
 

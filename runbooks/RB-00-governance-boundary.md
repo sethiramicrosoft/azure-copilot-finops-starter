@@ -3,6 +3,7 @@
 ## Policy
 
 This starter is recommendation-first and human-governed.
+LLM output is advisory until deterministic checks and explicit approval are present.
 
 The following are never automatic:
 
@@ -19,6 +20,13 @@ For any consequential action, capture:
 - explicit decision (`approve`/`reject`/`needsMoreEvidence`)
 - timestamp
 - rationale
+
+Consequential actions include:
+
+1. resizing/shutdowns
+2. budget/policy edits
+3. reservation/savings-plan purchases
+4. infrastructure mutations
 
 ## Enforcement points
 

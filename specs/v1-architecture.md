@@ -16,6 +16,13 @@ Deliver a high-capability FinOps loop with strict human governance:
 4. Full decision/outcome ledger
 5. Re-check loop to measure impact
 
+## Authority split (explicit)
+
+1. **Intelligence interface:** Azure Copilot + Azure Copilot Agent interpret Cost Management signals and draft recommendations.
+2. **Runtime authority:** this starter validates policy, enforces human approval, routes actions, and records audit evidence.
+
+Model output is never treated as an executable command by default.
+
 ## V1 system components
 
 1. **Cost Data Ingestor**
@@ -32,16 +39,17 @@ Deliver a high-capability FinOps loop with strict human governance:
    - Produces persona-specific recommendation narratives
    - Enforces recommendation-only posture (`allowAutomaticMutation=false`)
 
-4. **Recommendation Engine**
+4. **Recommendation Contract + Validator**
    - Emits `FinOpsRecommendation` documents
    - Includes evidence references and impact estimate
    - Always sets `approvalRequired = true`
+   - Rejects responses that violate `allowAutomaticMutation=false`
 
-5. **Approval Plane**
+5. **Approval Plane (Runtime Authority)**
    - Human approve/reject/needsMoreEvidence
    - Captures rationale and approver identity
 
-6. **Action Router**
+6. **Action Router (Governed)**
    - Creates/updates work items in customer tooling
    - Assigns/reassigns owners
    - Posts status comments
@@ -62,10 +70,10 @@ flowchart LR
     A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
     B --> C[Analytics Engine\nAnomaly + Budget Risk + Forecast + What-if]
     C --> K[Azure Copilot Agent Layer\nPersona-specific recommendation drafts]
-    K --> D[Recommendation Engine\nFinOpsRecommendation approvalRequired=true]
+    K --> D[Recommendation Contract + Validator\napprovalRequired=true / allowAutomaticMutation=false]
 
-    D --> E[Approval Plane\nHuman approve/reject/needsMoreEvidence]
-    E --> F[Action Router\nADO/Jira/GitHub/Custom]
+    D --> E[Approval Plane (Runtime Authority)\nHuman approve/reject/needsMoreEvidence]
+    E --> F[Action Router (Governed)\nADO/Jira/GitHub/Custom]
     F --> G[External Work Item System]
 
     D --> H[Action Ledger\nAppend-only audit events]
@@ -98,6 +106,10 @@ V1 does not auto-execute:
 - budget/policy edits
 - reservation/savings-plan purchases
 - any infrastructure mutation
+
+## Consequential action definition
+
+Any operation that can change cost posture or runtime state is consequential and must remain human-authorized. This includes the four non-goal categories above.
 
 ## Success metrics
 

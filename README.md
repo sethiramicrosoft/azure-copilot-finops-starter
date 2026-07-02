@@ -20,23 +20,51 @@ It provides contracts, state logic, and governance boundaries so teams can integ
 
 ---
 
-## Azure Copilot role in this solution
+## Azure Copilot + Azure Copilot Agent role in this solution
 
-This solution uses Azure Copilot as the conversational and recommendation layer over FinOps signals.
+This solution is intentionally split into two planes:
+
+1. **Intelligence interface (Azure Copilot + Azure Copilot Agent)**
+   - explains cost drivers and anomalies,
+   - drafts evidence-backed recommendations,
+   - frames outputs for role-specific consumers.
+2. **Runtime authority (orchestration in this starter)**
+   - enforces policy,
+   - requires explicit human approval for consequential actions,
+   - routes approved actions,
+   - records auditable outcomes.
+
+In short: Azure Copilot Agent provides the Cost Management intelligence; this starter enforces the governance and execution boundary.
+
 Azure Copilot (with agent capability) is used to:
 
 - summarize cost drivers and anomalies,
 - generate evidence-backed recommendations,
 - support persona-specific views (engineering, EM, FinOps, FP&A, procurement, exec),
-- route approved actions into external work systems.
+- hand off approved actions to external work systems through governed adapters.
 
 All consequential actions remain human-approved and are never auto-executed.
 
-### Implementation mode (current, factual)
+### Consequential action definition
 
-- **Supported today:** human-in-the-loop usage of Azure Copilot for cost analysis/recommendation drafting, then captured into this workflow.
-- **Not assumed in default path:** an official public Azure Copilot API endpoint for direct custom app invocation.
-- **If your tenant provides a supported endpoint:** this starter can plug it in through the client adapter layer.
+In this project, a consequential action is any operation that can change cloud cost posture or runtime state, including:
+
+- resource resizing/shutdown
+- budget or policy edits
+- reservation/savings-plan purchases
+- any infrastructure mutation
+
+These actions are recommendation-only until explicit human approval/authorization is captured.
+
+### Capability truth table (current, factual)
+
+| Capability | Status |
+| --- | --- |
+| Human-in-the-loop Azure Copilot Cost Management analysis and recommendation drafting | **Live now** |
+| Governance enforcement (`approvalRequired=true`, `allowAutomaticMutation=false`) | **Live now** |
+| Routing approved actions to ADO/Jira/GitHub via adapters | **Live now** |
+| Direct programmatic Azure Copilot endpoint invocation from custom runtime | **Tenant-dependent** |
+| Automatic consequential mutation (infra/cost changes) | **Not supported by design** |
 
 ### How Azure Copilot helps in this solution
 
@@ -116,6 +144,7 @@ The following are **never automatic**:
 - any infrastructure mutation
 
 Any consequential action requires explicit human approval/authorization.
+LLM output is advisory until it passes deterministic policy checks and approval gating.
 
 ---
 
@@ -201,10 +230,10 @@ flowchart LR
     A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
     B --> C[Analytics Engine<br/>Anomaly + Budget Risk + Forecast + What-if]
     C --> K[Azure Copilot Agent Layer<br/>Persona-specific recommendation drafts]
-    K --> D[Recommendation Engine<br/>FinOpsRecommendation approvalRequired=true]
+    K --> D[Recommendation Contract + Validator<br/>approvalRequired=true / allowAutomaticMutation=false]
 
-    D --> E[Approval Plane<br/>Human approve/reject/needsMoreEvidence]
-    E --> F[Action Router<br/>ADO/Jira/GitHub/Custom]
+    D --> E[Approval Plane (Runtime Authority)<br/>Human approve/reject/needsMoreEvidence]
+    E --> F[Action Router (Governed)<br/>ADO/Jira/GitHub/Custom]
     F --> G[External Work Item System]
 
     D --> H[Action Ledger<br/>Append-only audit events]
