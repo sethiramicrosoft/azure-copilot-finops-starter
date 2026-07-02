@@ -137,16 +137,17 @@ These five actions are intentionally system-agnostic so customers can integrate 
 ## 8. Architecture diagram
 
 ```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'20px'},'flowchart':{'nodeSpacing':65,'rankSpacing':85,'padding':20,'useMaxWidth':true}} }%%
 flowchart LR
     A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
-    B --> C[Analytics Engine\nAnomaly + Budget Risk + Forecast + What-if]
-    C --> D[Recommendation Engine\nFinOpsRecommendation approvalRequired=true]
+    B --> C[Analytics Engine<br/>Anomaly + Budget Risk + Forecast + What-if]
+    C --> D[Recommendation Engine<br/>FinOpsRecommendation approvalRequired=true]
 
-    D --> E[Approval Plane\nHuman approve/reject/needsMoreEvidence]
-    E --> F[Action Router\nADO/Jira/GitHub/Custom]
+    D --> E[Approval Plane<br/>Human approve/reject/needsMoreEvidence]
+    E --> F[Action Router<br/>ADO/Jira/GitHub/Custom]
     F --> G[External Work Item System]
 
-    D --> H[Action Ledger\nAppend-only audit events]
+    D --> H[Action Ledger<br/>Append-only audit events]
     E --> H
     F --> H
 
@@ -154,7 +155,7 @@ flowchart LR
     I --> C
     I --> H
 
-    J[Governance Boundary\nNo automatic infra/cost mutation] -.enforced at.-> D
+    J[Governance Boundary<br/>No automatic infra/cost mutation] -.enforced at.-> D
     J -.enforced at.-> E
     J -.enforced at.-> F
 ```
