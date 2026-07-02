@@ -38,6 +38,38 @@ All consequential actions remain human-approved and are never auto-executed.
 - **Not assumed in default path:** an official public Azure Copilot API endpoint for direct custom app invocation.
 - **If your tenant provides a supported endpoint:** this starter can plug it in through the client adapter layer.
 
+### How Azure Copilot helps in this solution
+
+Azure Copilot is the intelligence layer for turning raw cost signals into decision-ready guidance.
+
+In this architecture, Azure Copilot helps by:
+
+1. **Explaining cost signals in plain language**
+   - Converts anomaly/budget/forecast signals into understandable narratives.
+
+2. **Producing persona-specific recommendations**
+   - Frames the same signal differently for engineering, EM, FinOps, FP&A, procurement, and executive audiences.
+
+3. **Linking guidance to evidence**
+   - Recommendations include evidence references so teams can verify the basis for the recommendation.
+
+4. **Accelerating triage and ownership**
+   - Suggests owner-ready actions that can be routed into ADO/Jira/GitHub/custom systems.
+
+5. **Improving consistency of decision quality**
+   - Standardizes recommendation framing and required decision context across teams.
+
+### Important governance note
+
+Azure Copilot in this solution is used for analysis and recommendation support — not autonomous execution.
+
+All consequential actions are explicitly human-approved/authorized, and the following are never automatic:
+
+- resource resizing/shutdowns
+- budget or policy edits
+- reservation/savings-plan purchases
+- infrastructure mutations
+
 ---
 
 ## 2. Why this exists
