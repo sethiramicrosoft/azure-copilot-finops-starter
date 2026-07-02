@@ -6,6 +6,155 @@ It is designed for teams that want to replace manual cost spreadsheets, ad-hoc r
 
 ---
 
+## Start here (no jargon)
+
+If you are a user, this is the flow:
+
+1. You ask **Azure Copilot in Azure Portal** to analyze your cost signal.
+2. Azure Copilot gives you recommendation text + evidence.
+3. This starter turns that recommendation into a **governed action**:
+   - approve/reject decision,
+   - owner assignment,
+   - work-item routing (ADO/Jira/GitHub),
+   - audit ledger.
+4. Nothing changes in Azure automatically. Human approval is required.
+
+## Exactly where you call Azure Copilot
+
+You call Azure Copilot in the **Azure Portal** (Cost Management context), not inside this repo by default.
+
+Typical operator path:
+
+1. Open Azure Portal.
+2. Go to **Cost Management** scope (subscription/resource group/management group).
+3. Open **Copilot** in that context.
+4. Ask cost questions, for example:
+   - "Why did compute cost spike this week?"
+   - "What are the top cost drivers for this subscription?"
+   - "Give me optimization actions with risk and expected impact."
+5. Copy the recommendation summary/evidence into your operating workflow (this starter).
+
+## Advanced Azure Copilot Cost Management playbook (practical)
+
+Use these prompt packs directly in Azure Copilot (Cost Management context).  
+Each pack is designed to produce decision-ready output you can move into this starter.
+
+### 1) Cost spike triage (anomaly)
+
+**Prompt pack**
+1. "Show the top 5 cost drivers for the last 7 days vs previous 7 days for this scope."
+2. "Break each driver by service, meter/category, and workload tag if available."
+3. "For each driver, tell me likely cause, confidence, and missing data that could change the conclusion."
+4. "Give me actions ranked by impact, risk, and reversibility."
+
+**What good output looks like**
+- Names the exact drivers and deltas (not generic statements).
+- Includes confidence and uncertainty.
+- Separates reversible actions from high-risk actions.
+- Provides evidence references you can trace.
+
+### 2) Budget risk early warning
+
+**Prompt pack**
+1. "Based on current run-rate, what is the month-end projection for this budget scope?"
+2. "What is the confidence band for that forecast and why?"
+3. "What are the top contributors to projected overrun?"
+4. "Give me 3 mitigation actions with expected savings and execution risk."
+
+**What good output looks like**
+- Forecast is tied to explicit run-rate logic.
+- Confidence is explained, not implied.
+- Mitigations include estimated impact and risk.
+
+### 3) Commitment opportunity check (Reservations/Savings Plan candidates)
+
+**Prompt pack**
+1. "Identify stable usage patterns in the last 30-90 days that may qualify for commitment discounts."
+2. "Separate stable baseline from burst usage."
+3. "Estimate upside and downside risk if usage drops."
+4. "Recommend decision options for procurement review (no auto-purchase)."
+
+**What good output looks like**
+- Distinguishes baseline vs burst clearly.
+- Shows downside risk and commitment regret risk.
+- Ends with recommendation options, not automatic action.
+
+### 4) Rightsizing candidate review
+
+**Prompt pack**
+1. "Find top compute/storage/network cost contributors with low utilization signals."
+2. "List rightsizing candidates with expected savings, performance risk, and rollback complexity."
+3. "Prioritize candidates by net benefit and operational safety."
+4. "Output owner-ready actions."
+
+**What good output looks like**
+- Candidate list includes risk and rollback plan expectation.
+- Prioritization is explicit and reasoned.
+- Output is assignable to owners.
+
+## Copilot response quality gate (before you approve anything)
+
+Use this checklist before moving to action:
+
+- Evidence references are present and relevant.
+- Confidence is stated.
+- Uncertainty/missing data is called out.
+- Proposed action is reversible or has rollback path.
+- No autonomous mutation language.
+- Human decision required is explicit.
+
+If any item is missing, mark `needsMoreEvidence` and request refinement in Copilot.
+
+## Role view: what each team should ask Copilot to produce
+
+| Role | Ask Copilot for | Must include |
+| --- | --- | --- |
+| FinOps | cost driver narrative + ranked options | impact estimate, confidence, evidence |
+| Engineering Manager | owner-ready execution plan | owner mapping, delivery risk, rollback note |
+| FP&A | budget/forecast implication | variance narrative, confidence band |
+| Procurement | commitment decision support | upside/downside risk, option set |
+| Executive | decision summary | top risk, decision needed, expected impact |
+
+## From Copilot answer to governed action (this starter's value)
+
+This project adds value after Copilot by enforcing:
+
+1. decision capture (`approve` / `reject` / `needsMoreEvidence`),
+2. owner assignment,
+3. ticket routing (ADO/Jira/GitHub),
+4. immutable audit trail.
+
+### Decision template (copy/paste)
+
+```json
+{
+  "decision": "approve",
+  "approverId": "<name-or-id>",
+  "rationale": "<why this action is approved>",
+  "ownerId": "<team-or-user>",
+  "requiredEvidence": [
+    "<evidence-ref-1>",
+    "<evidence-ref-2>"
+  ]
+}
+```
+
+## Weekly operating cadence (simple and effective)
+
+- **Daily (10-15 min):** anomaly triage + owner assignment.
+- **Twice weekly:** follow up `needsMoreEvidence` items.
+- **Weekly:** closed-loop review (approved vs realized impact).
+- **Monthly:** commitment opportunity checkpoint with procurement/finance.
+
+## What this repo does today vs later
+
+| Mode | What happens |
+| --- | --- |
+| **Today (default)** | Human uses Azure Copilot in portal, then this starter governs approval/routing/audit. |
+| **Later (tenant-dependent)** | If your tenant exposes supported programmatic access, the same governance flow can call through an adapter. |
+
+---
+
 ## 1. What this project is
 
 Azure FinOps Starter is a reference foundation for implementing:
@@ -253,7 +402,7 @@ Detailed architecture notes are in `specs/v1-architecture.md`.
 
 ---
 
-## 9. Quick start
+## 9. Quick start (5-minute user walkthrough)
 
 ### Prerequisites
 
@@ -261,24 +410,45 @@ Detailed architecture notes are in `specs/v1-architecture.md`.
 - npm 9+
 - Git
 
-### Build
+### Step 1 — run the starter locally
 
 ```bash
 npm install
 npm run build
-```
-
-### Run demo (tenant-safe local mode)
-
-```bash
 npm run demo
 ```
 
-Configure runtime via local environment variables (see `.env.example` and `runbooks/RB-02-tenant-runtime-wiring.md`).
+What you will see:
+- one sample cost signal,
+- one recommendation-to-action lifecycle,
+- approval + state transitions,
+- audit events written to `data/action-ledger.jsonl`.
 
-### Output
+### Step 2 — use Azure Copilot for real analysis
 
-Compiled artifacts are emitted to `dist/`.
+In Azure Portal Cost Management, ask Copilot your real cost questions (spike, forecast risk, optimization options), then capture its recommendation/evidence.
+
+### Step 3 — run the same governance flow on that recommendation
+
+Use this starter to enforce:
+- explicit human decision (`approve`/`reject`/`needsMoreEvidence`),
+- owner assignment and routing,
+- immutable audit trail.
+
+### Step 4 — connect your tracker and tenant config
+
+Set `.env` locally (do not commit it), then choose routing mode:
+- `TRACKER_MODE=memory` (local)
+- `TRACKER_MODE=github`
+- `TRACKER_MODE=jira`
+- `TRACKER_MODE=ado`
+
+See: `.env.example` and `runbooks/RB-02-tenant-runtime-wiring.md`.
+
+### Important current behavior
+
+`npm run demo` uses a deterministic local recommendation client for reproducible testing.  
+It does **not** directly invoke Azure Copilot endpoint APIs in the default path.
 
 ---
 

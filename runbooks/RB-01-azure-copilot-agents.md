@@ -16,6 +16,49 @@ Define how Azure Copilot agent capability is used in this solution without viola
 - This runbook does not assume a public Azure Copilot API endpoint is generally available.
 - If an organization has a supported endpoint in its tenant, it can be wired through the adapter layer.
 
+## Operator workflow (plain language)
+
+1. Operator uses Azure Copilot in Azure Portal Cost Management to analyze a real signal.
+2. Operator captures recommendation summary + evidence references.
+3. This starter validates policy (`approvalRequired=true`, `allowAutomaticMutation=false`).
+4. Human approver records explicit decision.
+5. Approved actions are routed to ADO/Jira/GitHub.
+6. All decisions and outcomes are appended to the ledger.
+
+This is intentional: Copilot is the intelligence interface; this starter is the governance and execution control plane.
+
+## Advanced operator playbook (Cost Management)
+
+Use Azure Copilot to generate decision-ready analysis, then use this starter for governance and execution control.
+
+### Required minimum output from Copilot before intake
+
+- driver summary,
+- proposed action,
+- risk level,
+- estimated impact,
+- confidence statement,
+- evidence references.
+
+### If output quality is weak
+
+Set decision to `needsMoreEvidence` and ask Copilot follow-ups:
+
+1. "What missing data could invalidate this recommendation?"
+2. "What is the confidence level and why?"
+3. "What is the safest reversible action first?"
+4. "What evidence should approver review before approval?"
+
+### Governance handoff rule
+
+No recommendation moves to `authorized` or `inProgress` without:
+
+- explicit approve decision,
+- approver identity,
+- rationale,
+- timestamp,
+- evidence references.
+
 ## Agent responsibilities
 
 1. Convert FinOps signals into recommendation drafts.
