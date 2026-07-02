@@ -34,117 +34,222 @@ Typical operator path:
    - "Give me optimization actions with risk and expected impact."
 5. Copy the recommendation summary/evidence into your operating workflow (this starter).
 
-## Advanced Azure Copilot Cost Management playbook (practical)
+## Copilot-first FinOps operating system (not just prompts)
 
-Use these prompt packs directly in Azure Copilot (Cost Management context).  
-Each pack is designed to produce decision-ready output you can move into this starter.
+This project is meant to operationalize Cost Management work that a FinOps person/team does across the year.  
+Azure Copilot is the analysis interface; this starter is the governed action system.
 
-### 1) Cost spike triage (anomaly)
+### Coverage map (what work is covered)
 
-**Prompt pack**
-1. "Show the top 5 cost drivers for the last 7 days vs previous 7 days for this scope."
-2. "Break each driver by service, meter/category, and workload tag if available."
-3. "For each driver, tell me likely cause, confidence, and missing data that could change the conclusion."
-4. "Give me actions ranked by impact, risk, and reversibility."
+| Cadence | FinOps responsibility | Copilot role | This starter's role |
+| --- | --- | --- | --- |
+| Daily | anomaly triage, budget watch, owner follow-up | explain drivers, rank actions, highlight uncertainty | decision capture, routing, audit |
+| Weekly | trend review, optimization backlog, forecast refresh | summarize drift, compare options, propose priorities | backlog state control, accountability trail |
+| Monthly | close-cycle variance review, budget controls, commitment review | narrate variance, estimate impact bands, produce options | approval governance, ticket lifecycle, evidence ledger |
+| Quarterly | commitment strategy, policy tuning, architecture optimization themes | scenario analysis and risk framing | controlled execution and measurable outcome tracking |
+| Yearly | planning baseline, governance model review, KPI targets | historical synthesis and planning support | immutable history for planning and audit |
 
-**What good output looks like**
-- Names the exact drivers and deltas (not generic statements).
-- Includes confidence and uncertainty.
-- Separates reversible actions from high-risk actions.
-- Provides evidence references you can trace.
+### Daily run (operator checklist)
 
-### 2) Budget risk early warning
+1. Review new anomalies and budget-risk alerts in scope.
+2. Ask Copilot for top drivers, confidence, and missing evidence.
+3. Triage each item into one of:
+   - `approve`
+   - `reject`
+   - `needsMoreEvidence`
+4. Assign owner and due date for approved items.
+5. Route to tracker (ADO/Jira/GitHub) and verify state transitions.
+6. End-of-day: check unresolved high-risk items and stale approvals.
 
-**Prompt pack**
-1. "Based on current run-rate, what is the month-end projection for this budget scope?"
-2. "What is the confidence band for that forecast and why?"
-3. "What are the top contributors to projected overrun?"
-4. "Give me 3 mitigation actions with expected savings and execution risk."
+### Weekly run (operator checklist)
 
-**What good output looks like**
-- Forecast is tied to explicit run-rate logic.
-- Confidence is explained, not implied.
-- Mitigations include estimated impact and risk.
+1. Review trend shifts (week-over-week, top service deltas, top workload deltas).
+2. Re-prioritize optimization backlog by impact, risk, reversibility.
+3. Refresh forecast confidence and budget-overrun risk.
+4. Review `needsMoreEvidence` queue and close/advance aged items.
+5. Publish weekly decision summary:
+   - approved count,
+   - rejected count,
+   - pending evidence count,
+   - expected vs realized impact.
 
-### 3) Commitment opportunity check (Reservations/Savings Plan candidates)
+### Monthly run (operator checklist)
 
-**Prompt pack**
-1. "Identify stable usage patterns in the last 30-90 days that may qualify for commitment discounts."
-2. "Separate stable baseline from burst usage."
-3. "Estimate upside and downside risk if usage drops."
-4. "Recommend decision options for procurement review (no auto-purchase)."
+1. Perform month-end variance narrative (actual vs forecast vs budget).
+2. Review commitment opportunities (RI/SP candidates) with downside risk.
+3. Validate chargeback/showback signal quality and missing tags/ownership gaps.
+4. Confirm top recurring waste patterns and owners.
+5. Produce month-end governance report with auditable evidence links.
 
-**What good output looks like**
-- Distinguishes baseline vs burst clearly.
-- Shows downside risk and commitment regret risk.
-- Ends with recommendation options, not automatic action.
+### Quarterly run (operator checklist)
 
-### 4) Rightsizing candidate review
+1. Reassess top optimization themes and platform engineering initiatives.
+2. Evaluate policy/budget control efficacy and false-positive rate.
+3. Revisit commitment strategy (coverage, utilization, regret risk).
+4. Tune decision thresholds (what must always require escalation).
+5. Publish quarter roadmap with owner-level accountability.
 
-**Prompt pack**
-1. "Find top compute/storage/network cost contributors with low utilization signals."
-2. "List rightsizing candidates with expected savings, performance risk, and rollback complexity."
-3. "Prioritize candidates by net benefit and operational safety."
-4. "Output owner-ready actions."
+### Yearly run (operator checklist)
 
-**What good output looks like**
-- Candidate list includes risk and rollback plan expectation.
-- Prioritization is explicit and reasoned.
-- Output is assignable to owners.
+1. Build annual baseline from historical cost and driver seasonality.
+2. Set KPI targets and governance thresholds for next cycle.
+3. Review FinOps operating model and approval authority matrix.
+4. Review toolchain gaps and automation roadmap.
+5. Archive year-end evidence package for audit/executive planning.
 
-## Copilot response quality gate (before you approve anything)
+## Advanced prompt library by FinOps task
 
-Use this checklist before moving to action:
+### A) Daily anomaly triage prompts
 
-- Evidence references are present and relevant.
-- Confidence is stated.
-- Uncertainty/missing data is called out.
-- Proposed action is reversible or has rollback path.
-- No autonomous mutation language.
-- Human decision required is explicit.
+1. "List today's top cost anomalies by business impact, with confidence and evidence references."
+2. "For each anomaly, separate probable root cause vs uncertain hypotheses."
+3. "Suggest the safest reversible first action for each item."
+4. "Identify what additional evidence is required before approval."
 
-If any item is missing, mark `needsMoreEvidence` and request refinement in Copilot.
+### B) Budget risk prompts
 
-## Role view: what each team should ask Copilot to produce
+1. "Given current run-rate, estimate month-end overshoot probability and confidence band."
+2. "What 3 drivers contribute most to projected overrun?"
+3. "Provide mitigation options ranked by savings vs delivery risk."
 
-| Role | Ask Copilot for | Must include |
-| --- | --- | --- |
-| FinOps | cost driver narrative + ranked options | impact estimate, confidence, evidence |
-| Engineering Manager | owner-ready execution plan | owner mapping, delivery risk, rollback note |
-| FP&A | budget/forecast implication | variance narrative, confidence band |
-| Procurement | commitment decision support | upside/downside risk, option set |
-| Executive | decision summary | top risk, decision needed, expected impact |
+### C) Forecast quality prompts
 
-## From Copilot answer to governed action (this starter's value)
+1. "Compare current forecast against prior forecast and explain material drift."
+2. "Which assumptions changed, and how sensitive is the forecast to each?"
+3. "What evidence gaps reduce confidence?"
 
-This project adds value after Copilot by enforcing:
+### D) Commitment prompts (RI/SP candidates)
 
-1. decision capture (`approve` / `reject` / `needsMoreEvidence`),
-2. owner assignment,
-3. ticket routing (ADO/Jira/GitHub),
-4. immutable audit trail.
+1. "Identify stable baseline usage suitable for commitment discounts."
+2. "Separate baseline from burst and quantify regret risk."
+3. "Provide decision options with upside/downside scenarios."
 
-### Decision template (copy/paste)
+### E) Rightsizing prompts
 
-```json
-{
-  "decision": "approve",
-  "approverId": "<name-or-id>",
-  "rationale": "<why this action is approved>",
-  "ownerId": "<team-or-user>",
-  "requiredEvidence": [
-    "<evidence-ref-1>",
-    "<evidence-ref-2>"
-  ]
-}
-```
+1. "Find top underutilized high-cost resources by workload."
+2. "Rank candidates by expected savings, performance risk, rollback complexity."
+3. "Output owner-ready actions with evidence references."
 
-## Weekly operating cadence (simple and effective)
+## Visuals and reporting capabilities (Copilot + Cost Management)
 
-- **Daily (10-15 min):** anomaly triage + owner assignment.
-- **Twice weekly:** follow up `needsMoreEvidence` items.
-- **Weekly:** closed-loop review (approved vs realized impact).
-- **Monthly:** commitment opportunity checkpoint with procurement/finance.
+### What Azure Copilot can do for visuals
+
+In Cost Management context, Azure Copilot can generate visual analysis outputs such as:
+
+- time-series cost summaries,
+- service/meter/product breakdowns,
+- month-to-month or period comparisons,
+- forecast views,
+- OpenAI usage cost simulations (where supported).
+
+Use prompts like:
+
+1. "Show a monthly cost trend for the last 6 months and highlight material jumps."
+2. "Break down last month's costs by service and by meter."
+3. "Compare this month vs last month by service and quantify top deltas."
+4. "Forecast the next 3 months with confidence notes."
+
+### What Azure Copilot can do for reports
+
+Azure Copilot can produce report-ready narrative content:
+
+- driver summary,
+- top risks,
+- prioritized options,
+- expected impact and confidence,
+- missing evidence and follow-up asks.
+
+### What this starter adds for report quality
+
+This starter converts Copilot analysis into governed report artifacts:
+
+1. decision record (`approve` / `reject` / `needsMoreEvidence`),
+2. owner and due-date accountability,
+3. tracker linkage (ADO/Jira/GitHub),
+4. immutable action/outcome audit trail.
+
+### Weekly report pack (recommended)
+
+- Top 10 anomalies with status and owner
+- Approved vs rejected vs needsMoreEvidence counts
+- Expected vs realized impact for closed items
+- Forecast drift and confidence changes
+- Escalations requiring leadership decisions
+
+### Monthly report pack (recommended)
+
+- Actual vs forecast vs budget narrative
+- Recurring cost drivers and closure status
+- Commitment option set with downside risk
+- Control effectiveness (false positives / false negatives)
+- Governance summary with evidence references
+
+## Quality gate for Copilot output (must pass before action)
+
+- Driver clarity: exact drivers and deltas identified.
+- Evidence quality: references are traceable and relevant.
+- Confidence: level stated with reason.
+- Uncertainty: missing data and invalidation conditions listed.
+- Safety: no autonomous mutation language.
+- Actionability: owner-ready step is explicit.
+
+If any gate fails, set `needsMoreEvidence`.
+
+## Decision and escalation policy
+
+- **Approve**: evidence is sufficient, risk accepted, owner assigned.
+- **Reject**: recommendation invalid, low-value, or risk too high.
+- **NeedsMoreEvidence**: missing data blocks safe decision.
+
+Escalate when any of these are true:
+- high financial impact with low confidence,
+- recommendation implies policy/budget/commitment change,
+- cross-team ownership conflict,
+- repeated recurrence without root-cause closure.
+
+## What this starter adds that Learn docs do not
+
+Learn helps users ask better Copilot questions.  
+This starter adds the execution layer:
+
+1. enforce approval policy,
+2. convert recommendation to tracked action,
+3. assign owner and workflow state,
+4. preserve immutable decision/outcome audit history,
+5. measure realized impact after action closure.
+
+## Detailed reporting outputs (Excel + Power BI datafiles)
+
+Yes, this solution supports detailed reporting workflows beyond visual chat responses.
+
+### Reporting path A — Power BI direct connector (where supported)
+
+Use the Microsoft Cost Management connector in Power BI Desktop for supported agreements/scopes.  
+This is best for interactive dashboards with near-real-time cost views.
+
+### Reporting path B — Export-based datafiles (recommended baseline)
+
+Use Cost Management Exports to Azure Storage (CSV/Parquet/FOCUS), then build:
+
+- Excel workbooks (`.xlsx`) for operational packs,
+- Power BI models (`.pbix`) for dashboards and executive reporting.
+
+This path is stable for large/historical datasets and works well with governance workflows.
+
+### How this starter connects to reporting
+
+Copilot produces analysis and decision context.  
+This starter adds action governance and ledger events.  
+Reports should combine:
+
+1. Cost data (from Cost Management exports),
+2. Decision/action data (from action ledger),
+3. Outcome evidence (post-action re-check).
+
+For full setup, see `runbooks/RB-04-excel-powerbi-reporting.md`.
+
+For full role-by-role and cadence-by-cadence operating procedures, see:
+`runbooks/RB-03-finops-operating-system.md`
 
 ## What this repo does today vs later
 
