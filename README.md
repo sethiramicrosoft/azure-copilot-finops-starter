@@ -134,7 +134,7 @@ Azure Copilot is the analysis interface; this starter is the governed action sys
 
 ### What Azure Copilot can do for visuals
 
-In Cost Management context, Azure Copilot can generate visual analysis outputs such as:
+In Cost Management context, Azure Copilot can provide structured cost analysis responses (summaries, breakdowns, comparisons, forecasts, and supported simulations) in the portal experience.
 
 - time-series cost summaries,
 - service/meter/product breakdowns,
@@ -225,7 +225,7 @@ Yes, this solution supports detailed reporting workflows beyond visual chat resp
 ### Reporting path A — Power BI direct connector (where supported)
 
 Use the Microsoft Cost Management connector in Power BI Desktop for supported agreements/scopes.  
-This is best for interactive dashboards with near-real-time cost views.
+Use this only where agreement/scope support is confirmed in your tenant (for example direct MCA/EA support as documented by Microsoft).
 
 ### Reporting path B — Export-based datafiles (recommended baseline)
 
@@ -233,6 +233,8 @@ Use Cost Management Exports to Azure Storage (CSV/Parquet/FOCUS), then build:
 
 - Excel workbooks (`.xlsx`) for operational packs,
 - Power BI models (`.pbix`) for dashboards and executive reporting.
+
+Azure Copilot does not directly export .xlsx or .pbix files from chat; those are produced through Excel/Power BI using Cost Management data sources.
 
 This path is stable for large/historical datasets and works well with governance workflows.
 

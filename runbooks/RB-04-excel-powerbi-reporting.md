@@ -7,7 +7,7 @@ Define how to produce detailed Excel and Power BI reports using Azure Cost Manag
 ## What Azure Copilot provides vs what reporting stack provides
 
 - **Azure Copilot provides:** analysis narratives, ranked options, confidence/uncertainty framing.
-- **Reporting stack provides:** durable tabular datasets, workbook/dashboard files, recurring report generation.
+- **Reporting stack provides:** durable tabular datasets and the tooling path to build workbook/dashboard files (Excel/Power BI) and recurring report generation.
 
 ## Data sources for reports
 
