@@ -1,6 +1,6 @@
 import { assertTransitionAllowed, decisionToNextState } from "./stateMachine.js";
 import type { ActionItem, ActionState, ApprovalArtifact, Recommendation, RouterAdapter } from "./types.js";
-import { ActionLedger } from "./ledger.js";
+import type { LedgerStore } from "./ledger.js";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -19,7 +19,7 @@ function assertApprovalIsValid(approval: ApprovalArtifact | undefined): asserts 
 export class HumanGovernedActionService {
   constructor(
     private readonly adapter: RouterAdapter,
-    private readonly ledger: ActionLedger
+    private readonly ledger: LedgerStore
   ) {}
 
   async createActionFromRecommendation(recommendation: Recommendation): Promise<ActionItem> {

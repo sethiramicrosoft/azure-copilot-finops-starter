@@ -32,3 +32,9 @@ export class ActionLedger {
     return this.events.filter((e) => e.actionId === actionId);
   }
 }
+
+export interface LedgerStore {
+  append(actionId: string, eventType: LedgerEvent["eventType"], payload: Record<string, unknown>): LedgerEvent;
+  list(): LedgerEvent[];
+  listByAction(actionId: string): LedgerEvent[];
+}

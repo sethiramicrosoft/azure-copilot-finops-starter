@@ -8,10 +8,12 @@ yarn-error.log*
 dist/
 build/
 coverage/
+data/
 
 # Env
 .env
 .env.*
+!.env.example
 
 # OS
 .DS_Store

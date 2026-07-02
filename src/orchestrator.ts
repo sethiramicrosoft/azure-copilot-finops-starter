@@ -1,5 +1,5 @@
 import type { ActionItem, ApprovalArtifact } from "./types.js";
-import { ActionLedger } from "./ledger.js";
+import { ActionLedger, type LedgerStore } from "./ledger.js";
 import { HumanGovernedActionService } from "./actionRouter.js";
 import type {
   CopilotAgentClient,
@@ -12,14 +12,15 @@ import { assertGovernancePolicy } from "./policy.js";
 import type { RouterAdapter } from "./types.js";
 
 export class AzureCopilotFinOpsOrchestrator {
-  readonly ledger: ActionLedger;
+  readonly ledger: LedgerStore;
   readonly actionService: HumanGovernedActionService;
 
   constructor(
     private readonly copilotClient: CopilotAgentClient,
-    adapter: RouterAdapter
+    adapter: RouterAdapter,
+    ledger?: LedgerStore
   ) {
-    this.ledger = new ActionLedger();
+    this.ledger = ledger ?? new ActionLedger();
     this.actionService = new HumanGovernedActionService(adapter, this.ledger);
   }
 

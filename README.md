@@ -133,10 +133,11 @@ This repository currently includes a working core foundation:
 - deterministic action state machine
 - approval decision mapping and enforcement
 - human-governed action service
-- append-only in-memory action ledger
+- append-only action ledger (in-memory and durable file-backed options)
 - tool-agnostic router adapter interface
 - Azure Copilot orchestration layer for persona-based recommendation drafting
 - reference in-memory adapters for ADO/Jira/GitHub/ServiceNow/custom
+- production API adapters for GitHub Issues, Jira, and Azure DevOps
 
 ### Specs and runbooks
 
@@ -144,8 +145,9 @@ This repository currently includes a working core foundation:
 - router behavior contract
 - governance boundary runbook
 - Azure Copilot agent integration runbook
+- tenant runtime wiring runbook
 
-Current repository status: governance/workflow core and Azure Copilot orchestration scaffolding are implemented; production connectors and API layers remain in roadmap.
+Current repository status: governance/workflow core, durable local ledger, and production tracker adapter implementations are implemented. Service hosting/API hardening remains in roadmap.
 
 ---
 
@@ -237,6 +239,14 @@ npm install
 npm run build
 ```
 
+### Run demo (tenant-safe local mode)
+
+```bash
+npm run demo
+```
+
+Configure runtime via local environment variables (see `.env.example` and `runbooks/RB-02-tenant-runtime-wiring.md`).
+
 ### Output
 
 Compiled artifacts are emitted to `dist/`.
@@ -295,7 +305,6 @@ This repository currently does **not** include:
 
 - production API service layer
 - persistent database implementation
-- production-grade ADO/Jira/GitHub adapter implementations
 - full cost-ingest and analytics engine implementation
 - role-specific UI/reporting packs
 

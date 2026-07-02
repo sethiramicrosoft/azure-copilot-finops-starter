@@ -11,6 +11,7 @@
     "clean": "powershell -NoProfile -Command \"if (Test-Path dist) { Remove-Item -Recurse -Force dist }\""
   },
   "devDependencies": {
+    "@types/node": "^22.10.5",
     "typescript": "^5.6.3"
   }
 }
