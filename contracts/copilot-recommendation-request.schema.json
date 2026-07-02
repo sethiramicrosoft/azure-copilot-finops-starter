@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sethiramicrosoft.github.io/azure-copilot-finops-starter/contracts/copilot-recommendation-request.schema.json",
+  "title": "CopilotRecommendationRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "signalId",
+    "signalType",
+    "scope",
+    "persona",
+    "context",
+    "evidenceRefs",
+    "governance"
+  ],
+  "properties": {
+    "signalId": { "type": "string", "minLength": 1 },
+    "signalType": {
+      "type": "string",
+      "enum": ["anomaly", "budgetRisk", "forecast", "commitment", "rightsizing", "policy", "other"]
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scopeType", "scopeId"],
+      "properties": {
+        "scopeType": {
+          "type": "string",
+          "enum": ["managementGroup", "subscription", "resourceGroup", "resource", "billingProfile"]
+        },
+        "scopeId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "persona": {
+      "type": "string",
+      "enum": ["engineering", "engineeringManager", "finops", "fpAndA", "procurement", "executive"]
+    },
+    "context": { "type": "string", "minLength": 1 },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalRequired", "allowAutomaticMutation"],
+      "properties": {
+        "approvalRequired": { "type": "boolean", "const": true },
+        "allowAutomaticMutation": { "type": "boolean", "const": false }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Azure FinOps Starter
 
-A governance-first starter for building an **AI-assisted, human-approved FinOps operating model** on Azure.
+A governance-first starter for building an Azure Copilot-enabled, **AI-assisted, human-approved FinOps operating model** on Azure.
 
 It is designed for teams that want to replace manual cost spreadsheets, ad-hoc review meetings, and inconsistent follow-up with a repeatable, auditable action loop.
 
@@ -17,6 +17,20 @@ Azure FinOps Starter is a reference foundation for implementing:
 5. outcome verification and audit logging.
 
 It provides contracts, state logic, and governance boundaries so teams can integrate their own data pipelines and delivery tooling without losing control.
+
+---
+
+## Azure Copilot role in this solution
+
+This solution uses Azure Copilot as the conversational and recommendation layer over FinOps signals.
+Azure Copilot (with agent capability) is used to:
+
+- summarize cost drivers and anomalies,
+- generate evidence-backed recommendations,
+- support persona-specific views (engineering, EM, FinOps, FP&A, procurement, exec),
+- route approved actions into external work systems.
+
+All consequential actions remain human-approved and are never auto-executed.
 
 ---
 
@@ -83,12 +97,17 @@ This repository currently includes a working core foundation:
 - human-governed action service
 - append-only in-memory action ledger
 - tool-agnostic router adapter interface
+- Azure Copilot orchestration layer for persona-based recommendation drafting
+- reference in-memory adapters for ADO/Jira/GitHub/ServiceNow/custom
 
 ### Specs and runbooks
 
 - architecture specification with diagram
 - router behavior contract
 - governance boundary runbook
+- Azure Copilot agent integration runbook
+
+Current repository status: governance/workflow core and Azure Copilot orchestration scaffolding are implemented; production connectors and API layers remain in roadmap.
 
 ---
 
@@ -141,7 +160,8 @@ These five actions are intentionally system-agnostic so customers can integrate 
 flowchart LR
     A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
     B --> C[Analytics Engine<br/>Anomaly + Budget Risk + Forecast + What-if]
-    C --> D[Recommendation Engine<br/>FinOpsRecommendation approvalRequired=true]
+    C --> K[Azure Copilot Agent Layer<br/>Persona-specific recommendation drafts]
+    K --> D[Recommendation Engine<br/>FinOpsRecommendation approvalRequired=true]
 
     D --> E[Approval Plane<br/>Human approve/reject/needsMoreEvidence]
     E --> F[Action Router<br/>ADO/Jira/GitHub/Custom]
@@ -237,7 +257,7 @@ This repository currently does **not** include:
 
 - production API service layer
 - persistent database implementation
-- prebuilt ADO/Jira/GitHub adapter implementations
+- production-grade ADO/Jira/GitHub adapter implementations
 - full cost-ingest and analytics engine implementation
 - role-specific UI/reporting packs
 

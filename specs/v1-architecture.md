@@ -27,26 +27,31 @@ Deliver a high-capability FinOps loop with strict human governance:
    - Budget risk checks
    - Forecast and what-if simulation wrappers
 
-3. **Recommendation Engine**
+3. **Azure Copilot Agent Layer**
+   - Consumes FinOps signals and evidence references
+   - Produces persona-specific recommendation narratives
+   - Enforces recommendation-only posture (`allowAutomaticMutation=false`)
+
+4. **Recommendation Engine**
    - Emits `FinOpsRecommendation` documents
    - Includes evidence references and impact estimate
    - Always sets `approvalRequired = true`
 
-4. **Approval Plane**
+5. **Approval Plane**
    - Human approve/reject/needsMoreEvidence
    - Captures rationale and approver identity
 
-5. **Action Router**
+6. **Action Router**
    - Creates/updates work items in customer tooling
    - Assigns/reassigns owners
    - Posts status comments
    - Transitions workflow states
 
-6. **Action Ledger**
+7. **Action Ledger**
    - Append-only event stream (`ActionLedgerEvent`)
    - Durable audit trail for recommendation -> decision -> outcome
 
-7. **Impact Re-checker**
+8. **Impact Re-checker**
    - Re-evaluates cost behavior after action resolution
    - Records outcome evidence
 
@@ -56,7 +61,8 @@ Deliver a high-capability FinOps loop with strict human governance:
 flowchart LR
     A[Azure Cost Management + Metadata] --> B[Cost Data Ingestor]
     B --> C[Analytics Engine\nAnomaly + Budget Risk + Forecast + What-if]
-    C --> D[Recommendation Engine\nFinOpsRecommendation approvalRequired=true]
+    C --> K[Azure Copilot Agent Layer\nPersona-specific recommendation drafts]
+    K --> D[Recommendation Engine\nFinOpsRecommendation approvalRequired=true]
 
     D --> E[Approval Plane\nHuman approve/reject/needsMoreEvidence]
     E --> F[Action Router\nADO/Jira/GitHub/Custom]
