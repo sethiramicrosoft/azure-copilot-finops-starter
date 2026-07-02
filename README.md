@@ -1,31 +1,46 @@
-# Azure Copilot FinOps Starter
+# Azure FinOps Starter
 
-Forkable starter for a **human-approved** FinOps operating loop using Azure Cost Management + Azure Copilot + agents.
+A production-oriented starter for teams that want a **human-governed FinOps operating loop** on Azure.
 
-## Non-negotiable safety boundary
+It helps teams move from manual spreadsheets and ad-hoc reviews to a repeatable workflow:
 
-This project is recommendation-first and human-governed:
+1. detect cost signals,
+2. generate evidence-backed recommendations,
+3. require explicit human decisions,
+4. route approved work into existing trackers,
+5. re-check and record outcomes.
 
-- Never auto-execute resizing/shutdowns
-- Never auto-edit budgets or policies
-- Never auto-purchase reservations/savings plans
-- Never mutate infrastructure automatically
+## Who this is for
 
-All such actions remain recommendations requiring explicit human approval/authorization.
+- **FinOps leads** who need faster triage and stronger governance
+- **Engineering managers and service owners** who need clear ownership and action tracking
+- **FP&A / finance teams** who need auditable decision trails and outcome evidence
+- **Procurement/commercial teams** who need recommendation pipelines (not auto-execution)
 
-## What this starter does
+## What this starter includes
 
-1. Pulls and normalizes cost data
-2. Detects anomalies and budget risk
-3. Generates role-specific summaries
-4. Creates action recommendations
-5. Routes actions to customer tooling (ADO/Jira/GitHub/other)
-6. Tracks decisions and outcomes in an audit ledger
-7. Re-checks impact after action completion
+- JSON contracts for recommendations and action-ledger events
+- Tool-agnostic action router contract (ADO/Jira/GitHub/custom)
+- Human-governed workflow core (state machine + approval enforcement)
+- Append-only action ledger for auditability
+- Architecture and governance runbooks
+
+## Non-negotiable governance boundary
+
+This project is recommendation-first and human-governed.
+
+The following are **never automatic**:
+
+- resizing/shutdowns
+- budget or policy edits
+- reservation/savings-plan purchases
+- infrastructure mutations
+
+Any consequential action requires explicit human approval/authorization.
 
 ## Universal action contract
 
-The workflow is tool-agnostic and centered on five action types:
+The workflow is centered on five action types:
 
 1. Create/update action item
 2. Assign/reassign owner
@@ -33,19 +48,34 @@ The workflow is tool-agnostic and centered on five action types:
 4. Change workflow state
 5. Persist decisions/outcomes in action ledger
 
-## Repository structure
+## Quick start
 
-```text
-contracts/                   JSON schemas for recommendations and action ledger
-specs/                       Product and architecture specs
-connectors/                  Tracker connector interfaces and adapters
-runbooks/                    Operational and governance runbooks
+```bash
+npm install
+npm run build
 ```
 
-## Next build steps
+## Repo map
 
-1. Define stable schemas for recommendation + action ledger
-2. Add connector interface (ADO/Jira/GitHub + generic webhook)
-3. Add approval workflow state machine
-4. Add sample prompt packs per persona
-5. Add reference implementation modules
+```text
+contracts/      JSON schemas
+connectors/     Tool-agnostic adapter contract
+src/            TypeScript workflow core
+specs/          Architecture and flow definitions
+runbooks/       Governance and operational policy
+```
+
+## Architecture
+
+See `specs/v1-architecture.md` for component flow and diagram.
+
+## Current status
+
+The repository currently provides the governance-first core and contracts.
+
+Next implementation layers:
+
+1. adapters for ADO/Jira/GitHub/custom webhook
+2. approval API and persistence backend
+3. ingest/analytics modules for cost, anomaly, and forecast pipelines
+4. role-specific prompt/report packs
